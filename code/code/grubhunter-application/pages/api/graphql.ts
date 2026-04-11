@@ -4,12 +4,14 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { typeDefs } from "@/graphql/locations/schema";
 import { resolvers } from "@/graphql/locations/resolvers";
 import dbConnect from "@/middleware/data/mongo-connect";
+import { getToken } from "next-auth/jwt";
 
 const server = new ApolloServer<BaseContext>({ typeDefs, resolvers });
 
 const handler = startServerAndCreateNextHandler(server, {
-  context: async () => {
-    return {};
+  context: async (req) => {
+    const token = await getToken({ req });
+    return { token };
   },
 });
 

@@ -6,7 +6,7 @@ async function findLocations(
   filter: FilterLocationType | FilterWishlistType | {},
 ) {
   try {
-    let result: Array<LocationInterface | undefined> =
+    const result: Array<LocationInterface | undefined> =
       await Locations.find(filter);
 
     return result as LocationInterface[];
@@ -18,7 +18,7 @@ async function findLocations(
 }
 
 export async function findAllLocations() {
-  let filter = {};
+  const filter = {};
 
   return await findLocations(filter);
 }
@@ -26,13 +26,13 @@ export async function findAllLocations() {
 export async function findLocationsById(
   location_ids: string[],
 ): Promise<LocationInterface[] | []> {
-  let filter = { location_id: location_ids };
+  const filter = { location_id: location_ids };
 
   return await findLocations(filter);
 }
 
 export async function onUserWishlist(user_id: string) {
-  let filter: FilterWishlistType = {
+  const filter: FilterWishlistType = {
     on_wishlist: {
       $in: [user_id],
     },
@@ -46,8 +46,8 @@ export async function updateWishlist(
   user_id: string,
   action: string,
 ) {
-  let filter = { location_id: location_id };
-  let options: QueryOptions = { upsert: true, returnDocument: "after" };
+  const filter = { location_id: location_id };
+  const options: QueryOptions = { upsert: true, returnDocument: "after" };
   let update = {};
 
   switch (action) {
@@ -61,7 +61,7 @@ export async function updateWishlist(
   }
 
   try {
-    let result: LocationInterface | null = await Locations.findOneAndUpdate(
+    const result: LocationInterface | null = await Locations.findOneAndUpdate(
       filter,
       update,
       options,

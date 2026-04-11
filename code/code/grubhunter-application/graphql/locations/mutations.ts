@@ -1,6 +1,12 @@
 import { LocationInterface } from "@/mongoose/locations/interface";
 import { updateWishlist } from "@/mongoose/locations/services";
 import { createContext, useState, useContext } from "react";
+import { authGuard } from "@/middleware/auth-guards";
+import { JWT } from "next-auth/jwt";
+
+interface contextInterface {
+  token: JWT;
+}
 
 const authContext = createContext({
   user: null,
@@ -13,11 +19,21 @@ interface WishListInterface {
 }
 
 export const mutations = {
-  addWishlist: async (_: undefined, param: { data: LocationInterface }) => {
+  addWishlist: async (
+    _: any,
+    param: { data: LocationInterface },
+    userId: string,
+    context: contextInterface,
+  ) => {
     const wishlist: WishListInterface = {
       location_id: param.data.location_id,
-      user_id: "1",
+      user_id: userId,
     };
+
+    const guard = authGuard({ param }, context);
+    if (guard !== true) {
+      return guard;
+    }
 
     const data = await updateWishlist(
       wishlist.location_id,
@@ -28,11 +44,21 @@ export const mutations = {
     return data;
   },
 
-  removeWishlist: async (_: undefined, param: { data: LocationInterface }) => {
+  removeWishlist: async (
+    _: any,
+    param: { data: LocationInterface },
+    userId: string,
+    context: contextInterface,
+  ) => {
     const wishlist: WishListInterface = {
       location_id: param.data.location_id,
-      user_id: "1",
+      user_id: userId,
     };
+
+    const guard = authGuard({ param }, context);
+    if (guard !== true) {
+      return guard;
+    }
 
     const data = await updateWishlist(
       wishlist.location_id,

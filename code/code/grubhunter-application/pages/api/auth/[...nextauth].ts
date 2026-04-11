@@ -35,6 +35,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     callbacks: {
       async jwt({ token }) {
+        if (token?.email && !token.fdlst_private_userId) {
+          token.fdlst_private_userId = createUserId(token.email);
+        }
         return token;
       },
       async session({ session }) {
